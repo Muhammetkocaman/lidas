@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "971198948181",
+    "project_id": "lidas-42485",
+    "storage_bucket": "lidas-42485.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:971198948181:android:b70fbd84682b934920c5dc",
+        "android_client_info": {
+          "package_name": "com.example.lidas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwx9lMrG-EKxgFKi485V2wI3O7xjQb6aA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
