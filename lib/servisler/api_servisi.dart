@@ -2,23 +2,25 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiServisi {
+  // API endpoint ve key tanımlamaları
   static const String _baseUrl = 'https://rest.coinapi.io/v1';
   static const String _apiKey = '64402a73-abb2-4943-9c97-bea832956b48';
 
   // Tüm kurları getir
   Future<List<dynamic>> getKurlar() async {
-    // USDT ve TRY bazlı dönüşümler için para birimleri
+    // Desteklenen kur çiftleri
     final List<Map<String, String>> kurCiftleri = [
-      {'base': 'USDT', 'quote': 'TRY'},  // USDT/TRY
-      {'base': 'BTC', 'quote': 'USDT'},  // BTC/USDT
-      {'base': 'ETH', 'quote': 'USDT'},  // ETH/USDT
-      {'base': 'BTC', 'quote': 'TRY'},   // BTC/TRY
-      {'base': 'ETH', 'quote': 'TRY'},   // ETH/TRY
+      {'base': 'USDT', 'quote': 'TRY'},
+      {'base': 'BTC', 'quote': 'USDT'},
+      {'base': 'ETH', 'quote': 'USDT'},
+      {'base': 'BTC', 'quote': 'TRY'},
+      {'base': 'ETH', 'quote': 'TRY'},
     ];
     
     List<dynamic> sonuclar = [];
 
     try {
+      // Her kur çifti için API çağrısı
       for (var kurCifti in kurCiftleri) {
         final response = await http.get(
           Uri.parse('$_baseUrl/exchangerate/${kurCifti['base']}/${kurCifti['quote']}'),
@@ -37,6 +39,7 @@ class ApiServisi {
       }
       return sonuclar;
     } catch (e) {
+      // Hata yönetimi
       throw Exception('Kurlar yüklenirken hata oluştu: $e');
     }
   }

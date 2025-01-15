@@ -6,18 +6,17 @@ import 'ekranlar/giris_ekrani.dart';
 import 'ekranlar/kurlar_sayfasi.dart';
 import 'ekranlar/detay_ekrani.dart';
 import 'ekranlar/favoriler_ekrani.dart';
+import 'ekranlar/profil_ekrani.dart';
 
 void main() async {
+  // Firebase'i başlat
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Firebase options'a locale ekleyelim
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
   // Firebase'e default locale'i set edelim
   await FirebaseAuth.instance.setLanguageCode('tr');
-
 
   runApp(const LidasApp());
 }
@@ -28,13 +27,16 @@ class LidasApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      // Uygulama ayarları
       title: 'Lidas',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
         useMaterial3: true,
       ),
-      initialRoute: '/giris',
+      
+      // Ana rotalar ve sayfa yönlendirmeleri
+      initialRoute: '/anasayfa',
       routes: {
         '/giris': (context) => const GirisEkrani(),
         '/anasayfa': (context) => const AnaSayfa(),
@@ -54,33 +56,48 @@ class AnaSayfa extends StatefulWidget {
 
 class _AnaSayfaState extends State<AnaSayfa> {
   int _secilenIndeks = 0;
-  
-  final List<Widget> _sayfalar = [
-    const KurlarSayfasi(),
-    const FavorilerEkrani(),
-  ];
+  late final List<Widget> _sayfalar;
+
+  @override
+  void initState() {
+    super.initState();
+    _sayfalar = [
+      const KurlarSayfasi(),
+      const FavorilerEkrani(),
+      ProfilEkrani(),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _sayfalar[_secilenIndeks],
+      body: SafeArea(
+        child: _sayfalar[_secilenIndeks],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _secilenIndeks,
         onTap: (indeks) {
-          setState(() {
-            _secilenIndeks = indeks;
-          });
+          if (indeks >= 0 && indeks < _sayfalar.length) {
+            setState(() {
+              _secilenIndeks = indeks;
+            });
+          }
         },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Ana Sayfa',
+            icon: Icon(Icons.currency_exchange),
+            label: 'Kurlar',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
+            icon: Icon(Icons.star),
             label: 'Favoriler',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profil',
+          ),
         ],
+        type: BottomNavigationBarType.fixed,
       ),
     );
   }

@@ -104,10 +104,10 @@ class _GirisEkraniState extends State<GirisEkrani> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(
-                            Icons.account_circle,
-                            size: 80,
-                            color: Colors.blue,
+                          Image.asset(  
+                            'assets/images/logo.png',
+                            width: 200,
+                            height: 200,
                           ),
                           const SizedBox(height: 16),
                           const Text(

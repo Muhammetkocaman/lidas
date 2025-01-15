@@ -11,15 +11,14 @@ class AuthHatasi {
 }
 
 class AuthServisi {
+  // Firebase Auth instance
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // Mevcut kullanıcıyı alma
+  // Kullanıcı durumu takibi için getter'lar
   User? get mevcutKullanici => _auth.currentUser;
-
-  // Kullanıcı durumu değişikliklerini dinleme
   Stream<User?> get durumTakipcisi => _auth.authStateChanges();
 
-  // Email/Şifre ile kayıt
+  // Email/Şifre ile kayıt işlemi
   Future<User?> mailIleKayit(String email, String sifre) async {
     try {
       final userCredential = await _auth.createUserWithEmailAndPassword(
@@ -45,7 +44,7 @@ class AuthServisi {
     }
   }
 
-  // Email/Şifre ile giriş
+  // Email/Şifre ile giriş işlemi
   Future<bool> mailIleGiris(String email, String sifre) async {
     try {
       final userCredential = await _auth.signInWithEmailAndPassword(
