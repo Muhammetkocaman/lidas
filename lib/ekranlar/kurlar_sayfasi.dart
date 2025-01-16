@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import '../servisler/api_servisi.dart';
+import '../servisler/firestore_servisi.dart';
+
+// TODO: Arama özelliği eklenecek
+// TODO: Sıralama özelliği eklenecek
+// TODO: Detay sayfası eklenecek
 
 class KurlarSayfasi extends StatefulWidget {
   const KurlarSayfasi({super.key});
@@ -10,7 +15,9 @@ class KurlarSayfasi extends StatefulWidget {
 
 class _KurlarSayfasiState extends State<KurlarSayfasi> {
   final ApiServisi _apiServisi = ApiServisi();
-  List<dynamic> _kurlar = [];
+  final FirestoreServisi _firestoreServisi = FirestoreServisi();
+  List<Map<String, dynamic>> _kurlar = [];
+  final Set<String> _favoriler = {}; // Favori coinlerin ID'lerini tutacak set
   bool _yukleniyor = true;
   String? _hata;
 
@@ -30,7 +37,7 @@ class _KurlarSayfasiState extends State<KurlarSayfasi> {
       final kurlar = await _apiServisi.getKurlar();
       
       setState(() {
-        _kurlar = kurlar;
+        _kurlar = List<Map<String, dynamic>>.from(kurlar);
         _yukleniyor = false;
       });
     } catch (e) {
@@ -42,19 +49,46 @@ class _KurlarSayfasiState extends State<KurlarSayfasi> {
   }
 
   // Sayı formatlama yardımcı fonksiyonu
-  String _formatNumber(double number) {
-    if (number >= 1000000) {
-      return '${(number / 1000000).toStringAsFixed(2)}M';
-    } else if (number >= 1000) {
-      return '${(number / 1000).toStringAsFixed(2)}K';
-    } else {
-      return number.toStringAsFixed(2);
+
+  Widget _buildCoinIcon(String coinId) {
+    final Map<String, String> coinIcons = {
+      'USDT': 'assets/icons/usdt.png',
+      'BTC': 'assets/icons/btc.png',
+      'ETH': 'assets/icons/eth.png',
+      'BNB': 'assets/icons/bnb.png',
+      'XRP': 'assets/icons/xrp.png',
+      'ADA': 'assets/icons/ada.png',
+      'DOGE': 'assets/icons/doge.png',
+      'SOL': 'assets/icons/sol.png',
+      'DOT': 'assets/icons/dot.png',
+      'MATIC': 'assets/icons/matic.png',
+    };
+
+    return Image.asset(
+      coinIcons[coinId] ?? 'assets/icons/btc.png',
+      width: 32,
+      height: 32,
+      errorBuilder: (context, error, stackTrace) {
+        return Icon(Icons.currency_bitcoin, size: 32);
+      },
+    );
+  }
+
+  String _formatTRY(double value) {
+    if (value >= 1000000) {
+      return '${(value / 1000000).toStringAsFixed(2)}M';
+    } else if (value >= 1000) {
+      return '${(value / 1000).toStringAsFixed(2)}K';
     }
+    return value.toStringAsFixed(2);
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Scaffold(
+      backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.grey[100],
       appBar: AppBar(
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -74,7 +108,7 @@ class _KurlarSayfasiState extends State<KurlarSayfasi> {
               ),
             ),
             Text(
-              'Kripto Takip',
+              'Kripto Para Takip Uygulaması',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
@@ -132,67 +166,87 @@ class _KurlarSayfasiState extends State<KurlarSayfasi> {
                 )
               : RefreshIndicator(
                   onRefresh: _kurlariYukle,
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(8),
-                    itemCount: _kurlar.length,
-                    itemBuilder: (context, index) {
-                      final kur = _kurlar[index];
-                      final double rate = kur['rate']?.toDouble() ?? 0.0;
-                      
-                      return Card(
-                        elevation: 2,
-                        margin: const EdgeInsets.symmetric(
-                          vertical: 4,
-                          horizontal: 8,
-                        ),
-                        child: ListTile(
-                          leading: Container(
-                            width: 48,
-                            height: 48,
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Center(
-                              child: Image.asset(
-                                'assets/icons/${kur['asset_id_base'].toString().toLowerCase()}.png',
-                                width: 32,
-                                height: 32,
+                  child: StreamBuilder<List<String>>(
+                    stream: _firestoreServisi.favorileriDinle(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        _favoriler.clear();
+                        _favoriler.addAll(snapshot.data!);
+                      }
+
+                      return ListView.builder(
+                        padding: const EdgeInsets.all(8),
+                        itemCount: _kurlar.length,
+                        itemBuilder: (context, index) {
+                          final kur = _kurlar[index];
+                          final coinId = kur['asset_id_base'];
+                          final isFavorite = _favoriler.contains(coinId);
+
+                          return Card(
+                            color: isDark ? const Color(0xFF2A2A2A) : Colors.white,
+                            child: ListTile(
+                              leading: _buildCoinIcon(kur['asset_id_base']),
+                              title: Text(
+                                '${kur['asset_id_base']}/${kur['asset_id_quote']}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
                               ),
+                              subtitle: Text(
+                                '≈ ${_formatTRY(kur['rate_try'])} TL',
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    kur['rate'].toStringAsFixed(2),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  IconButton(
+                                    icon: Icon(
+                                      isFavorite ? Icons.star : Icons.star_border,
+                                      color: isFavorite ? Colors.amber : null,
+                                    ),
+                                    onPressed: () async {
+                                      try {
+                                        await _firestoreServisi.favoriGuncelle(coinId, !isFavorite);
+                                        setState(() {}); // UI'ı yenile
+                                      } catch (e) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text('Hata: $e')),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  '/detay',
+                                  arguments: kur,
+                                );
+                              },
                             ),
-                          ),
-                          title: Text(
-                            '${kur['asset_id_base']} / ${kur['asset_id_quote']}',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          subtitle: Text(
-                            'Son Güncelleme: ${DateTime.tryParse(kur['time'] ?? '')?.toLocal() ?? 'Bilinmiyor'}',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 12,
-                            ),
-                          ),
-                          trailing: Text(
-                            rate > 0 ? _formatNumber(rate) : '0',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          onTap: () {
-                            Navigator.pushNamed(
-                              context,
-                              '/detay',
-                              arguments: kur,
-                            );
-                          },
-                        ),
+                          );
+                        },
                       );
                     },
                   ),
                 ),
     );
+    
   }
-} 
+
+
+
+}
+ 

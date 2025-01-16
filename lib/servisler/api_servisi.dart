@@ -2,25 +2,29 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiServisi {
-  // API endpoint ve key tanımlamaları
   static const String _baseUrl = 'https://rest.coinapi.io/v1';
   static const String _apiKey = '64402a73-abb2-4943-9c97-bea832956b48';
 
   // Tüm kurları getir
   Future<List<dynamic>> getKurlar() async {
-    // Desteklenen kur çiftleri
+    // USDT ve TRY bazlı dönüşümler için para birimleri
     final List<Map<String, String>> kurCiftleri = [
-      {'base': 'USDT', 'quote': 'TRY'},
-      {'base': 'BTC', 'quote': 'USDT'},
-      {'base': 'ETH', 'quote': 'USDT'},
-      {'base': 'BTC', 'quote': 'TRY'},
-      {'base': 'ETH', 'quote': 'TRY'},
+      {'base': 'USDT', 'quote': 'TRY'},  
+      {'base': 'BTC', 'quote': 'USDT'},  
+      {'base': 'ETH', 'quote': 'USDT'},  
+      {'base': 'BNB', 'quote': 'USDT'},  
+      {'base': 'XRP', 'quote': 'USDT'},  
+      {'base': 'ADA', 'quote': 'USDT'},  
+      {'base': 'DOGE', 'quote': 'USDT'}, 
+      {'base': 'SOL', 'quote': 'USDT'},  
+      {'base': 'DOT', 'quote': 'USDT'},  
+      {'base': 'MATIC', 'quote': 'USDT'}, 
     ];
     
     List<dynamic> sonuclar = [];
+    double tryRate = 0.0;
 
     try {
-      // Her kur çifti için API çağrısı
       for (var kurCifti in kurCiftleri) {
         final response = await http.get(
           Uri.parse('$_baseUrl/exchangerate/${kurCifti['base']}/${kurCifti['quote']}'),
@@ -29,17 +33,24 @@ class ApiServisi {
 
         if (response.statusCode == 200) {
           final data = json.decode(response.body);
+          final rate = data['rate'] ?? 0.0;
+          
+          // USDT/TRY kurunu kaydet
+          if (kurCifti['base'] == 'USDT') {
+            tryRate = rate;
+          }
+
           sonuclar.add({
             'asset_id_base': kurCifti['base'],
             'asset_id_quote': kurCifti['quote'],
-            'rate': data['rate'] ?? 0,
+            'rate': rate,
+            'rate_try': kurCifti['base'] == 'USDT' ? rate : rate * tryRate,
             'time': data['time'],
           });
         }
       }
       return sonuclar;
     } catch (e) {
-      // Hata yönetimi
       throw Exception('Kurlar yüklenirken hata oluştu: $e');
     }
   }

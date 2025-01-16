@@ -1,7 +1,28 @@
 import 'package:flutter/material.dart';
 
-class AyarlarEkrani extends StatelessWidget {
-  const AyarlarEkrani({super.key});
+
+// TODO: Şifre değiştirme eklenecek
+// TODO: E-posta değiştirme eklenecek
+// TODO: Bildirim ayarları eklenecek
+// TODO: Dil seçeneği eklenecek
+
+
+class AyarlarEkrani extends StatefulWidget {
+  final bool karanlikMod;
+  final VoidCallback temaToggle;
+
+  const AyarlarEkrani({
+    super.key,
+    required this.karanlikMod,
+    required this.temaToggle,
+  });
+
+  @override
+  State<AyarlarEkrani> createState() => _AyarlarEkraniState();
+}
+
+class _AyarlarEkraniState extends State<AyarlarEkrani> {
+  bool _bildirimAktif = true;
 
   @override
   Widget build(BuildContext context) {
@@ -15,15 +36,14 @@ class AyarlarEkrani extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          // Uygulama Ayarları Grubu
           const _AyarBaslik(baslik: 'Uygulama Ayarları'),
           ListTile(
             leading: const Icon(Icons.dark_mode),
             title: const Text('Karanlık Mod'),
             trailing: Switch(
-              value: false, // TODO: Tema durumuna göre değişecek
+              value: widget.karanlikMod,
               onChanged: (value) {
-                // TODO: Tema değiştirme işlemi
+                widget.temaToggle();
               },
             ),
           ),
@@ -31,9 +51,11 @@ class AyarlarEkrani extends StatelessWidget {
             leading: const Icon(Icons.notifications),
             title: const Text('Bildirimler'),
             trailing: Switch(
-              value: true, // TODO: Bildirim durumuna göre değişecek
+              value: _bildirimAktif,
               onChanged: (value) {
-                // TODO: Bildirim ayarları
+                setState(() {
+                  _bildirimAktif = value;
+                });
               },
             ),
           ),
@@ -45,7 +67,7 @@ class AyarlarEkrani extends StatelessWidget {
             title: const Text('Şifre Değiştir'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
-              // TODO: Şifre değiştirme sayfasına yönlendir
+              // TODO: Şifre değiştirme sayfası yapılacak
             },
           ),
           ListTile(
@@ -53,21 +75,8 @@ class AyarlarEkrani extends StatelessWidget {
             title: const Text('E-posta Değiştir'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
-              // TODO: E-posta değiştirme sayfasına yönlendir
+              // TODO: E-posta değiştirme sayfası yapılacak
             },
-          ),
-
-          // Güvenlik Ayarları
-          const _AyarBaslik(baslik: 'Güvenlik'),
-          ListTile(
-            leading: const Icon(Icons.fingerprint),
-            title: const Text('Biyometrik Kilit'),
-            trailing: Switch(
-              value: false, // TODO: Biyometrik durum kontrolü
-              onChanged: (value) {
-                // TODO: Biyometrik kilit ayarı
-              },
-            ),
           ),
 
           // Diğer Ayarlar
@@ -77,7 +86,7 @@ class AyarlarEkrani extends StatelessWidget {
             title: const Text('Uygulama Hakkında'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
-              // TODO: Hakkında sayfasına yönlendir
+              // TODO: Hakkında sayfası yapılacak
             },
           ),
           ListTile(
@@ -87,7 +96,26 @@ class AyarlarEkrani extends StatelessWidget {
               style: TextStyle(color: Colors.red),
             ),
             onTap: () {
-              // TODO: Çıkış yapma işlemi
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Çıkış Yap'),
+                  content: const Text('Çıkış yapmak istediğinize emin misiniz?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('İptal'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        // Çıkış işlemi 
+                        Navigator.pushReplacementNamed(context, '/giris');
+                      },
+                      child: const Text('Çıkış Yap', style: TextStyle(color: Colors.red)),
+                    ),
+                  ],
+                ),
+              );
             },
           ),
         ],

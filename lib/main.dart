@@ -7,6 +7,8 @@ import 'ekranlar/kurlar_sayfasi.dart';
 import 'ekranlar/detay_ekrani.dart';
 import 'ekranlar/favoriler_ekrani.dart';
 import 'ekranlar/profil_ekrani.dart';
+import 'ekranlar/ayarlar_ekrani.dart';
+import 'ekranlar/splash_screen.dart';
 
 void main() async {
   // Firebase'i başlat
@@ -21,27 +23,60 @@ void main() async {
   runApp(const LidasApp());
 }
 
-class LidasApp extends StatelessWidget {
+class LidasApp extends StatefulWidget {
   const LidasApp({super.key});
+
+  @override
+  State<LidasApp> createState() => _LidasAppState();
+}
+
+class _LidasAppState extends State<LidasApp> {
+  bool _karanlikMod = false;
+
+  void temaToggle() {
+    setState(() {
+      _karanlikMod = !_karanlikMod;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // Uygulama ayarları
       title: 'Lidas',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
         useMaterial3: true,
+        brightness: Brightness.light,
       ),
-      
-      // Ana rotalar ve sayfa yönlendirmeleri
-      initialRoute: '/anasayfa',
+      darkTheme: ThemeData(
+        primarySwatch: Colors.blue,
+        useMaterial3: true,
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: const Color(0xFF1A1A1A),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF1A1A1A),
+          foregroundColor: Colors.white,
+        ),
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: Color(0xFF1A1A1A),
+          selectedItemColor: Colors.blue,
+          unselectedItemColor: Colors.grey,
+        ),
+        cardColor: const Color(0xFF2A2A2A),
+      ),
+      themeMode: _karanlikMod ? ThemeMode.dark : ThemeMode.light,
+      initialRoute: '/',
       routes: {
+        '/': (context) => const SplashScreen(),
         '/giris': (context) => const GirisEkrani(),
         '/anasayfa': (context) => const AnaSayfa(),
         '/detay': (context) => const DetayEkrani(),
-        '/favoriler': (context) => const FavorilerEkrani(),
+        '/favoriler': (context) => FavorilerEkrani(),
+        '/ayarlar': (context) => AyarlarEkrani(
+              karanlikMod: _karanlikMod,
+              temaToggle: temaToggle,
+            ),
       },
     );
   }
@@ -63,7 +98,7 @@ class _AnaSayfaState extends State<AnaSayfa> {
     super.initState();
     _sayfalar = [
       const KurlarSayfasi(),
-      const FavorilerEkrani(),
+      FavorilerEkrani(),
       ProfilEkrani(),
     ];
   }

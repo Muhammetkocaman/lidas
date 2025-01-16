@@ -11,10 +11,9 @@ class AuthHatasi {
 }
 
 class AuthServisi {
-  // Firebase Auth instance
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // Kullanıcı durumu takibi için getter'lar
+  // Kullanıcı durumu takip
   User? get mevcutKullanici => _auth.currentUser;
   Stream<User?> get durumTakipcisi => _auth.authStateChanges();
 
@@ -75,7 +74,6 @@ class AuthServisi {
     try {
       await _auth.signOut();
     } catch (e) {
-      print('Çıkış hatası: $e');
       throw 'Çıkış yapılırken bir hata oluştu.';
     }
   }

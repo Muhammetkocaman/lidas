@@ -1,16 +1,32 @@
-# lidas
 
-A new Flutter project.
 
-## Getting Started
+# Lidas - Kripto Para Takip Uygulaması
+    Dijital Altının Yeni Çağı
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+## Özellikler
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- 🔐 kullanıcı kimlik doğrulama
+- 📊 Gerçek zamanlı kripto para kurları
+- ⭐ Favori kripto paraları kaydetme
+- 🌓 Karanlık/Aydınlık tema desteği
+- 📱 Modern ve kullanıcı dostu arayüz
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Ekran Görüntüleri
+
+[Buraya ekran görüntülerini ekleyebilirsiniz]
+
+| Giriş Ekranı | Ana Sayfa | Favoriler |
+|--------------|-----------|-----------|
+| [Resim 1]    | [Resim 2] | [Resim 3] |
+
+## Teknolojiler
+
+- Flutter
+- Firebase Authentication
+- Cloud Firestore
+- CoinAPI.io
+
+Muhammet Emin Kocaman  
+Berkay Bedirhan Doğan
+Meylis Charyev

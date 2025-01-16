@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:lidas/ekranlar/ayarlar_ekrani.dart';
+
+
+  // TODO: Kullanıcı bilgileri yönetimi eklenecek
+  // TODO: Portföy yönetimi eklenecek
+  // TODO: Bildirim yönetimi eklenecek
+
+
 
 class ProfilEkrani extends StatelessWidget {
   const ProfilEkrani({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: isDark ? const Color(0xFF1A1A1A) : Colors.grey[100],
       body: SafeArea(
         child: ListView(
           children: [
-            // Üst kısım - Profil başlığı
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
@@ -22,20 +29,16 @@ class ProfilEkrani extends StatelessWidget {
                       CircleAvatar(
                         radius: 25,
                         backgroundColor: Colors.purple[200],
-                        child: Icon(Icons.person, color: Colors.white),
+                        child: const Icon(Icons.person, color: Colors.white),
                       ),
-                      SizedBox(width: 12),
-                      Text(
-                        'Merhaba Sherman',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      const SizedBox(width: 12),
                     ],
                   ),
                   IconButton(
-                    icon: Icon(Icons.notifications_outlined),
+                    icon: Icon(
+                      Icons.notifications_outlined,
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
                     onPressed: () {},
                   ),
                 ],
@@ -48,11 +51,9 @@ class ProfilEkrani extends StatelessWidget {
             _menuOgesi('Piyasa görünümü', Icons.insights, Colors.grey[400]),
             _menuOgesi('Ayarlar', Icons.settings, Colors.grey[400],
                 onTap: () {
-              Navigator.push(
+              Navigator.pushNamed(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const AyarlarEkrani(),
-                ),
+                '/ayarlar',
               );
             }),
             _menuOgesi('Yedekleme & Güvenlik', Icons.security, Colors.grey[400]),
@@ -66,11 +67,15 @@ class ProfilEkrani extends StatelessWidget {
                 children: [
                   Text(
                     'Şartlar & Gizlilik',
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(
+                      color: isDark ? Colors.grey[400] : Colors.grey,
+                    ),
                   ),
                   Text(
-                    'v0.0.1 beta',
-                    style: TextStyle(color: Colors.grey),
+                    'v0.0.1',
+                    style: TextStyle(
+                      color: isDark ? Colors.grey[400] : Colors.grey,
+                    ),
                   ),
                 ],
               ),
@@ -82,24 +87,40 @@ class ProfilEkrani extends StatelessWidget {
   }
   
   Widget _menuOgesi(String baslik, IconData ikon, Color? renk, {VoidCallback? onTap}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-      child: Card(
-        elevation: 0,
-        child: ListTile(
-          leading: Container(
-            padding: EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: renk,
-              borderRadius: BorderRadius.circular(8),
+    return Builder(
+      builder: (context) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+          child: Card(
+            elevation: 0,
+            color: isDark ? const Color(0xFF2A2A2A) : Colors.white,
+            child: ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: renk,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(ikon, color: Colors.white),
+              ),
+              title: Text(
+                baslik,
+                style: TextStyle(
+                  color: isDark ? Colors.white : Colors.black,
+                ),
+              ),
+              trailing: Icon(
+                Icons.chevron_right,
+                color: isDark ? Colors.white : Colors.black,
+              ),
+              onTap: onTap,
             ),
-            child: Icon(ikon, color: Colors.white),
           ),
-          title: Text(baslik),
-          trailing: Icon(Icons.chevron_right),
-          onTap: onTap,
-        ),
-      ),
+        );
+      },
     );
   }
 } 
+
