@@ -27,6 +27,8 @@
 - Cloud Firestore
 - CoinAPI.io
 
-Muhammet Emin Kocaman  
+Muhammet Emin Kocaman
+
 Berkay Bedirhan Doğan
+
 Meylis Charyev
