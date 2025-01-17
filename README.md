@@ -6,7 +6,7 @@
 
 ## Özellikler
 
-- 🔐 kullanıcı kimlik doğrulama
+- 🔐 Kullanıcı kimlik doğrulama
 - 📊 Gerçek zamanlı kripto para kurları
 - ⭐ Favori kripto paraları kaydetme
 - 🌓 Karanlık/Aydınlık tema desteği
