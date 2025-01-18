@@ -1,4 +1,4 @@
-
+https://youtu.be/2tAZ0NxcmPY?si=cD_LmcVAdaLuiyy9
 
 # Lidas - Kripto Para Takip Uygulaması
     Dijital Altının Yeni Çağı
@@ -12,13 +12,7 @@
 - 🌓 Karanlık/Aydınlık tema desteği
 - 📱 Modern ve kullanıcı dostu arayüz
 
-## Ekran Görüntüleri
 
-[Buraya ekran görüntülerini ekleyebilirsiniz]
-
-| Giriş Ekranı | Ana Sayfa | Favoriler |
-|--------------|-----------|-----------|
-| [Resim 1]    | [Resim 2] | [Resim 3] |
 
 ## Teknolojiler
 
