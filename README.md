@@ -1,4 +1,4 @@
-https://youtu.be/2tAZ0NxcmPY?si=cD_LmcVAdaLuiyy9
+Tanıtım videosu için --> https://youtu.be/2tAZ0NxcmPY?si=cD_LmcVAdaLuiyy9
 
 # Lidas - Kripto Para Takip Uygulaması
     Dijital Altının Yeni Çağı
