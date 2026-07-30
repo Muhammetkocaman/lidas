@@ -1,28 +1,26 @@
-Tanıtım videosu için --> https://youtu.be/2tAZ0NxcmPY?si=cD_LmcVAdaLuiyy9
+# Lidas
 
-# Lidas - Kripto Para Takip Uygulaması
-    Dijital Altının Yeni Çağı
+Flutter crypto tracking app for following market data and portfolio-style views.
 
+## Preview
 
-## Özellikler
+<p align="center">
+  <img src="docs/images/cover.svg" alt="Lidas preview" width="900" />
+</p>
 
-- 🔐 Kullanıcı kimlik doğrulama
-- 📊 Gerçek zamanlı kripto para kurları
-- ⭐ Favori kripto paraları kaydetme
-- 🌓 Karanlık/Aydınlık tema desteği
-- 📱 Modern ve kullanıcı dostu arayüz
+> Note: Some preview images may look slightly blurry due to screenshot compression. Thanks for your understanding.
 
+## Project Type
 
+Flutter App
 
-## Teknolojiler
+## Tech Stack
 
-- Flutter
-- Firebase Authentication
-- Cloud Firestore
-- CoinAPI.io
+- Dart
 
-Muhammet Emin Kocaman
+## Getting Started
 
-Berkay Bedirhan Doğan
-
-Meylis Charyev
+```bash
+flutter pub get
+flutter run
+```
